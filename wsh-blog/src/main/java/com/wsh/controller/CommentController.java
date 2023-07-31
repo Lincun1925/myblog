@@ -1,4 +1,4 @@
-package com.wsh;
+package com.wsh.controller;
 
 import com.wsh.constants.SystemConstants;
 import com.wsh.domain.ResponseResult;

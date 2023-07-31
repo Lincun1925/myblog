@@ -2,17 +2,18 @@ server:
   port: 7777
 spring:
   datasource:
-    url: jdbc:mysql://192.168.112.128:3306/sg_blog?characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://118.195.213.131:3456/sg_blog?characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
-    password: 1234
+    password: Yqzx1925@qq.com
     driver-class-name: com.mysql.cj.jdbc.Driver
   servlet:
     multipart:
       max-file-size: 2MB
       max-request-size: 5MB
   redis:
-    host: 192.168.112.128
-    port: 7001
+    host: 118.195.213.131
+    port: 6379
+    password: Yqzx1925@qq.com
 mybatis-plus:
   configuration:
     # 日志
@@ -23,3 +24,7 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
       id-type: auto
+oss:
+  accessKey: xXAf89_X7WrN-5Zp8jOBtS7tI2fnOrNbn0mKt5GE
+  secretKey: zOqFrnCxkXw9i5ClGSrhDuVYugjLGFARxqS8Edem
+  bucket: wsh-blog
