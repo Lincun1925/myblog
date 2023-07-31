@@ -1,4 +1,4 @@
-package com.sangeng.config;
+package com.wsh.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.sangeng.config;
+package com.wsh.config;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;

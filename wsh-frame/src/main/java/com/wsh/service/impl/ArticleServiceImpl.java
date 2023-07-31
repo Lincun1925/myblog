@@ -14,6 +14,7 @@ import com.wsh.domain.vo.PageVo;
 import com.wsh.mapper.ArticleMapper;
 import com.wsh.service.CategoryService;
 import com.wsh.utils.BeanCopyUtils;
+import com.wsh.utils.RedisCache;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,9 @@ import java.util.stream.Collectors;
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements com.wsh.service.ArticleService {
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private RedisCache redisCache;
 
     @Override
     public ResponseResult hotArticleList() {
@@ -71,7 +75,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         List<Article> articles = page.getRecords();
         //查询categoryName
-        articles.forEach(article -> article.setCategoryName(categoryService.getById(article.getCategoryId()).getName()));
+        articles.forEach(article -> {
+            article.setCategoryName(categoryService.getById(article.getCategoryId()).getName());
+            //实时浏览量
+            Integer viewCount = redisCache.getCacheMapValue("article:viewCount", article.getId().toString());
+            article.setViewCount(viewCount.longValue());
+        });
         //articleId去查询articleName进行设置
 //        for (Article article : articles) {
 //            Category category = categoryService.getById(article.getCategoryId());
@@ -89,6 +98,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public ResponseResult getArticleDetail(Long id) {
         //根据id查询文章
         Article article = getById(id);
+        //从redis中获取viewCount
+        Integer viewCount = redisCache.getCacheMapValue("article:viewCount", id.toString());
+        article.setViewCount(viewCount.longValue());
         //转换成VO
         ArticleDetailVo articleDetailVo = BeanCopyUtils.copyBean(article, ArticleDetailVo.class);
         //根据分类id查询分类名
@@ -99,5 +111,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
         //封装响应返回
         return ResponseResult.okResult(articleDetailVo);
+    }
+
+    @Override
+    public ResponseResult updateViewCount(Long id) {
+        //更新redis中对应 id的浏览量
+        redisCache.incrementCacheMapValue("article:viewCount", id.toString(), 1);
+        return ResponseResult.okResult();
     }
 }

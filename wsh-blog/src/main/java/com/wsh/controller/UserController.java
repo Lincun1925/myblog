@@ -1,5 +1,6 @@
 package com.wsh.controller;
 
+import com.wsh.annotation.SystemLog;
 import com.wsh.domain.ResponseResult;
 import com.wsh.domain.entity.User;
 import com.wsh.service.UserService;
@@ -19,6 +20,7 @@ public class UserController {
     }
 
     @PutMapping("/userInfo")
+    @SystemLog(businessName = "更新用户信息")
     public ResponseResult updateUserInfo(@RequestBody User user){
         return userService.updateUserInfo(user);
     }
