@@ -21,8 +21,6 @@
     </properties>
 
     <dependencyManagement>
-
-
         <dependencies>
             <!-- SpringBoot的依赖配置-->
             <dependency>
@@ -57,7 +55,6 @@
                 <artifactId>aliyun-sdk-oss</artifactId>
                 <version>3.10.2</version>
             </dependency>
-
 
             <dependency>
                 <groupId>com.alibaba</groupId>
