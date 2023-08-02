@@ -7,12 +7,15 @@ import com.wsh.domain.ResponseResult;
 import com.wsh.domain.dto.TagListDto;
 import com.wsh.domain.entity.Tag;
 import com.wsh.domain.vo.PageVo;
+import com.wsh.domain.vo.TagVo;
 import com.wsh.enums.AppHttpCodeEnum;
 import com.wsh.mapper.TagMapper;
 import com.wsh.service.TagService;
 import com.wsh.utils.BeanCopyUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.util.List;
 
 /**
  * 标签(Tag)表服务实现类
@@ -49,5 +52,14 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag> implements TagSe
         } else {
             return ResponseResult.errorResult(500, "插入失败");
         }
+    }
+
+    @Override
+    public List<TagVo> listAllTag() {
+        LambdaQueryWrapper<Tag> wrapper = new LambdaQueryWrapper<>();
+        wrapper.select(Tag::getId,Tag::getName);
+        List<Tag> list = list(wrapper);
+        List<TagVo> tagVos = BeanCopyUtils.copyBeanList(list, TagVo.class);
+        return tagVos;
     }
 }

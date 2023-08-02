@@ -4,11 +4,14 @@ import com.wsh.domain.ResponseResult;
 import com.wsh.domain.dto.TagListDto;
 import com.wsh.domain.entity.Tag;
 import com.wsh.domain.vo.PageVo;
+import com.wsh.domain.vo.TagVo;
 import com.wsh.enums.AppHttpCodeEnum;
 import com.wsh.service.TagService;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/content/tag")
@@ -47,6 +50,10 @@ public class TagController {
         } else {
             return ResponseResult.errorResult(500, "修改错误");
         }
-
+    }
+    @GetMapping("/listAllTag")
+    public ResponseResult listAllTag(){
+        List<TagVo> list = tagService.listAllTag();
+        return ResponseResult.okResult(list);
     }
 }
