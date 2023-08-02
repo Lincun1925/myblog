@@ -1,7 +1,10 @@
 package com.wsh.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.wsh.domain.ResponseResult;
+import com.wsh.domain.dto.TagListDto;
 import com.wsh.domain.entity.Tag;
+import com.wsh.domain.vo.PageVo;
 
 
 /**
@@ -12,4 +15,7 @@ import com.wsh.domain.entity.Tag;
  */
 public interface TagService extends IService<Tag> {
 
+    ResponseResult<PageVo> pageTagList(Integer pageNum, Integer pageSize, TagListDto tagListDto);
+
+    ResponseResult addTag(TagListDto tagListDto);
 }
