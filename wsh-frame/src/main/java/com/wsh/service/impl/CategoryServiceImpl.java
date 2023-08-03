@@ -1,18 +1,25 @@
 package com.wsh.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wsh.constants.SystemConstants;
 import com.wsh.domain.ResponseResult;
+import com.wsh.domain.dto.CategoryListDto;
 import com.wsh.domain.entity.Article;
 import com.wsh.domain.entity.Category;
+import com.wsh.domain.entity.Tag;
 import com.wsh.domain.vo.CategoryVo;
+import com.wsh.domain.vo.PageVo;
+import com.wsh.enums.AppHttpCodeEnum;
 import com.wsh.mapper.CategoryMapper;
+import com.wsh.mapper.TagMapper;
 import com.wsh.service.ArticleService;
 import com.wsh.service.CategoryService;
 import com.wsh.utils.BeanCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Set;
@@ -59,5 +66,31 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         List<Category> list = list(wrapper);
         List<CategoryVo> categoryVos = BeanCopyUtils.copyBeanList(list, CategoryVo.class);
         return categoryVos;
+    }
+
+    @Override
+    public ResponseResult<PageVo> pageCategoryList(Integer pageNum, Integer pageSize, CategoryListDto categoryListDto) {
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StringUtils.hasText(categoryListDto.getName()), Category::getName, categoryListDto.getName());
+        queryWrapper.eq(StringUtils.hasText(categoryListDto.getStatus()), Category::getStatus, categoryListDto.getStatus());
+        Page<Category> page = new Page<>();
+        page.setCurrent(pageNum);
+        page.setSize(pageSize);
+        page(page, queryWrapper);
+
+        PageVo pageVo = new PageVo(page.getRecords(), page.getTotal());
+        return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public ResponseResult addCategory(CategoryListDto categoryListDto) {
+        CategoryMapper mapper = getBaseMapper();
+        Category category = BeanCopyUtils.copyBean(categoryListDto, Category.class);
+        int insert = mapper.insert(category);
+        if (insert > 0) {
+            return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS);
+        } else {
+            return ResponseResult.errorResult(500, "插入失败");
+        }
     }
 }
