@@ -37,14 +37,13 @@ public class UploadServiceImpl implements UploadService {
         //获取原始文件名
         String originalFilename = img.getOriginalFilename();
         //对原始文件名进行判断
-        if (!originalFilename.endsWith(".png")) {
-            throw new SystemException(AppHttpCodeEnum.FILE_TYPE_ERROR);
+        if (originalFilename.endsWith(".png") || originalFilename.endsWith(".jpg")) {
+            //如果判断通过上传文件到OSS
+            String filePath = PathUtils.generateFilePath(originalFilename);
+            String url = uploadOss(img, filePath);//  2099/2/3/wqeqeqe.png
+            return ResponseResult.okResult(url);
         }
-
-        //如果判断通过上传文件到OSS
-        String filePath = PathUtils.generateFilePath(originalFilename);
-        String url = uploadOss(img, filePath);//  2099/2/3/wqeqeqe.png
-        return ResponseResult.okResult(url);
+        throw new SystemException(AppHttpCodeEnum.FILE_TYPE_ERROR);
     }
 
     private String uploadOss(MultipartFile imgFile, String filePath) {
