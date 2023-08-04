@@ -1,4 +1,4 @@
-# 个人在线博客系统:smile:
+# 在线博客系统:smile:
 #### 功能描述：前台可查看博文等信息，后台可管理系统和前台信息，如删写博文等
 #### 涉及技术栈：MySQL，Redis，MyBatisPlus，SpringSecurity，OSS，SpringBoot，Nginx
 ***
