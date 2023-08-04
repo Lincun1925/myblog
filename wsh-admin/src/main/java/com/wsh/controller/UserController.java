@@ -2,6 +2,7 @@ package com.wsh.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.wsh.annotation.SystemLog;
 import com.wsh.domain.ResponseResult;
 import com.wsh.domain.dto.UserDto;
 import com.wsh.domain.entity.Role;
@@ -74,6 +75,7 @@ public class UserController {
      */
     @PostMapping
     @Transactional
+    @SystemLog(businessName = "后台-添加用户")
     public ResponseResult addUser(@RequestBody UserDto userDto) {
         List<User> list = userService.list();
         // 注意：新增用户时注意密码加密存储。
@@ -123,6 +125,7 @@ public class UserController {
      * @return
      */
     @DeleteMapping("/{id}")
+    @SystemLog(businessName = "后台-删除用户")
     public ResponseResult deleteById(@PathVariable Long id) {
         if (SecurityUtils.getUserId().equals(id)) {
             return ResponseResult.errorResult(410, "不能删除当前操作用户");
@@ -161,6 +164,7 @@ public class UserController {
      * @return
      */
     @PutMapping
+    @SystemLog(businessName = "后台-更新用户")
     public ResponseResult update(@RequestBody UserDto userDto) {
         User old = userService.getById(userDto.getId());
         //1.手机邮箱不可重复

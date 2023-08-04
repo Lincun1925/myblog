@@ -20,12 +20,13 @@ public class UserController {
     }
 
     @PutMapping("/userInfo")
-    @SystemLog(businessName = "更新用户信息")
+    @SystemLog(businessName = "前台-更新用户")
     public ResponseResult updateUserInfo(@RequestBody User user){
         return userService.updateUserInfo(user);
     }
 
     @PostMapping("/register")
+    @SystemLog(businessName = "前台-注册用户")
     public ResponseResult register(@RequestBody User user){
         return userService.register(user);
     }
