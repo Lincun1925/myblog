@@ -25,9 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -88,6 +86,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             article.setCategoryName(categoryService.getById(article.getCategoryId()).getName());
             //实时浏览量
             Integer viewCount = redisCache.getCacheMapValue("article:viewCount", article.getId().toString());
+            //可能写了篇新文章，我要查看时，redis并没有对应的浏览量，需再写入缓存
+            if (viewCount == null) {
+                viewCount = article.getViewCount().intValue();
+                Map<String, Integer> map = new HashMap<>();
+                map.put(article.getId().toString(), viewCount);
+                redisCache.setCacheMap("article:viewCount", map);
+            }
             article.setViewCount(viewCount.longValue());
         });
         //articleId去查询articleName进行设置
