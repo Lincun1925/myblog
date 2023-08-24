@@ -73,8 +73,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         lambdaQueryWrapper.eq(Objects.nonNull(categoryId) && categoryId > 0, Article::getCategoryId, categoryId);
         // 状态是正式发布的
         lambdaQueryWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_NORMAL);
-        // 对isTop进行降序
-        lambdaQueryWrapper.orderByDesc(Article::getIsTop);
+        // 对置顶,浏览量字段进行降序
+        lambdaQueryWrapper.orderByDesc(Article::getIsTop,Article::getViewCount);
 
         //分页查询
         Page<Article> page = new Page<>(pageNum, pageSize);
